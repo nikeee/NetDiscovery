@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace DiscoverLib
+namespace NetDiscovery
 {
     class Discoverer : INetDiscoverer
     {

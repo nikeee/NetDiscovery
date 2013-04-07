@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace DiscoverLib
+namespace NetDiscovery
 {
     class Discoverable : INetDiscoverable
     {

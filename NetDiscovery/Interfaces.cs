@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace DiscoverLib
+namespace NetDiscovery
 {
     interface INetDiscoverable
     {
