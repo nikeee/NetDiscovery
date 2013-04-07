@@ -5,11 +5,13 @@ using System.Linq;
 using System.Security.Cryptography;
 using NetDiscovery.Packets;
 
+// May not work (hangover while coding)
+
 namespace NetDiscovery
 {
     static class PacketHandler
     {
-        private static readonly List<IPacket> RegisteredPackets = new List<IPacket>() { new OfferEndPointPacket(), new NoEndpointAvailablePacket() };
+        private static readonly List<IPacket> RegisteredPackets = new List<IPacket>() { new OfferEndPointPacket(), new NoEndpointAvailablePacket(), new EndpointRequestPacket() };
 
         private const int ChecksumWidth = 16;
 
@@ -87,9 +89,9 @@ namespace NetDiscovery
 
 /*
 
-byte[16] checksum; //MD5 // 16 byte -> better use CRC32
+byte[16] checksum; //MD5 // 16 bytes -> better use CRC32
 byte packetId; // 1 byte
 int contentLength; // 4 byte
-byte[contentLength] content; // contentLength byte
+byte[contentLength] content; // contentLength bytes
 
 */
