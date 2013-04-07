@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TAP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -27,7 +27,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;TAP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -44,9 +44,16 @@
   <ItemGroup>
     <Compile Include="Discoverable.cs" />
     <Compile Include="Discoverer.cs" />
+    <Compile Include="DiscoveryResult.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="ObjectExcentions.cs" />
     <Compile Include="PacketHandler.cs" />
+    <Compile Include="Packets\EndpointRequestPacket.cs" />
+    <Compile Include="Packets\IPacket.cs" />
+    <Compile Include="Packets\NoContentPacket.cs" />
+    <Compile Include="Packets\OfferEndPointPacket.cs" />
+    <Compile Include="Packets\PacketIds.cs" />
+    <Compile Include="Packets\NoEndpointAvailablePacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

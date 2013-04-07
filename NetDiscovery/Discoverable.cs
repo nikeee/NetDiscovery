@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace NetDiscovery
 {
@@ -17,7 +18,6 @@ namespace NetDiscovery
         {
             if (offeredEndpoint == null)
                 throw new ArgumentNullException("offeredEndpoint");
-
             _port = port;
             _offeredEndpoint = offeredEndpoint;
         }
@@ -50,7 +50,27 @@ namespace NetDiscovery
             }
         }
 
-        private byte[] _offeredEndpointData = null;
+        public async Task ListenAsync()
+        {
+            _cancelListening = false;
+
+            var clientEndpoint = new IPEndPoint(SourceAddress, _port);
+            _client.Client.Bind(clientEndpoint);
+
+            while (!_cancelListening)
+            {
+                var updResult = await _client.ReceiveAsync();
+                
+                var packet = PacketHandler.GetPacketInstance(updResult.Buffer);
+                if (packet == null)
+                    continue;
+
+                var response = CreateResponsePacket();
+                await _client.SendAsync(response, response.Length, clientEndpoint);
+            }
+        }
+
+        private byte[] _offeredEndpointData;
         private byte[] CreateResponsePacket()
         {
             return _offeredEndpointData ?? (_offeredEndpointData = _offeredEndpoint.SerializeToBytes());

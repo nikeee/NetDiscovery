@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using NetDiscovery.Packets;
 
 namespace NetDiscovery
 {
@@ -50,8 +51,8 @@ namespace NetDiscovery
                 idPlusContent[i] = content[i - 1];
 
             byte[] checksum;
-            using (var md5 = new MD5CryptoServiceProvider())
-                checksum = md5.ComputeHash(idPlusContent, 0, idPlusContent.Length);
+            using (var provider = new MD5CryptoServiceProvider()) //TODO: Change to CRC32
+                checksum = provider.ComputeHash(idPlusContent, 0, idPlusContent.Length);
 
             using (var ms = new MemoryStream())
             {
@@ -71,15 +72,15 @@ namespace NetDiscovery
                 checksum[i] = data[i];
 
             byte[] computedHash;
-            using (var md5 = new MD5CryptoServiceProvider())
-                computedHash = md5.ComputeHash(data, ChecksumWidth - 1, data.Length - ChecksumWidth);
+            using (var provider = new MD5CryptoServiceProvider()) //TODO: Change to CRC32
+                computedHash = provider.ComputeHash(data, ChecksumWidth - 1, data.Length - ChecksumWidth);
 
             if (checksum != computedHash)
                 return false;
 
             int contentLength = BitConverter.ToInt32(data, ChecksumWidth + 1);
 
-            return contentLength + ChecksumWidth + 1 == data.Length;
+            return contentLength + ChecksumWidth == data.Length;
         }
     }
 }

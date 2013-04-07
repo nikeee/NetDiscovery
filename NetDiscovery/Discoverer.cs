@@ -1,42 +1,11 @@
-using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
+using NetDiscovery.Packets;
 
 namespace NetDiscovery
 {
-
-    class DiscoveryResult
-    {
-        public bool Error { get; private set; }
-        public bool Canceled { get; private set; }
-        public bool NoEndPointAvailable { get; private set; }
-        public Exception Exception { get; private set; }
-        public IPEndPoint OfferedEndPoint { get; private set; }
-
-        public DiscoveryResult(bool error, bool canceled, bool noEndPointAvailable, Exception exception, IPEndPoint endPoint)
-        {
-            Error = error;
-            Canceled = canceled;
-            Exception = exception;
-            NoEndPointAvailable = noEndPointAvailable;
-            OfferedEndPoint = endPoint;
-        }
-        public DiscoveryResult(bool error, Exception exception)
-            : this(error, false, false, exception, null)
-        { }
-        public DiscoveryResult(IPEndPoint endpoint)
-            : this(false, false, false, null, endpoint)
-        { }
-
-        public DiscoveryResult(bool canceled)
-            : this(false, canceled, false, null, null)
-        { }
-
-        public readonly static DiscoveryResult NoEndpointAvailableResult = new DiscoveryResult(false, false, true, null,null);
-
-    }
-
     class Discoverer : INetDiscoverer
     {
         private static readonly IPAddress SourceAddress = IPAddress.Any;
@@ -55,18 +24,44 @@ namespace NetDiscovery
         {
             _cancelDiscovering = true;
         }
-
+        
         public DiscoveryResult Discover()
         {
-            var packet = CreateRequestPacket();
+            var packetData = CreateRequestPacket();
             while (!_cancelDiscovering)
             {
-                _client.Send(packet, packet.Length, new IPEndPoint(DestinationAddress, _port));
+                _client.Send(packetData, packetData.Length, new IPEndPoint(DestinationAddress, _port));
+                
+                IPEndPoint resEp = null;
+                var buffer = _client.Receive(ref resEp);
 
-                var serverEndpoint = new IPEndPoint(SourceAddress, _port);
-                var serverResponsePacket = _client.Receive(ref serverEndpoint);
+                var p = PacketHandler.GetPacketInstance(buffer);
+                if (p == null)
+                    continue;
 
-                var p = PacketHandler.GetPacketInstance(serverResponsePacket);
+                switch (p.Id)
+                {
+                    case PacketIds.NoEndpointAvailable:
+                        return DiscoveryResult.NoEndpointAvailableResult;
+                    case PacketIds.OfferEndPoint:
+                        return new DiscoveryResult(((OfferEndPointPacket)p).OfferedEndPoint);
+                    default:
+                        continue;
+                }
+            }
+            return new DiscoveryResult(true);
+        }
+
+        public async Task<DiscoveryResult> DiscoverAsync()
+        {
+            var packetData = CreateRequestPacket();
+            while (!_cancelDiscovering)
+            {
+                await _client.SendAsync(packetData, packetData.Length, new IPEndPoint(DestinationAddress, _port));
+
+                UdpReceiveResult res = await _client.ReceiveAsync();
+                
+                var p = PacketHandler.GetPacketInstance(res.Buffer);
                 if (p == null)
                     continue;
 
