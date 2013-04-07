@@ -1,0 +1,9 @@
+# git ignore file
+
+_ReSharper.NetDiscovery*/
+NetDiscovery/obj*
+NetDiscovery/bin*
+
+*.suo
+*.pdb
+*.dll
