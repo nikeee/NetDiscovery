@@ -22,22 +22,32 @@ namespace NetDiscovery
             _offeredEndpoint = offeredEndpoint;
         }
 
-        public IPEndPoint OfferedEndpoint
+        public IPEndPoint OfferedEndpoint { get { return _offeredEndpoint; } }
+
+        private bool _cancelListening;
+        public void Cancel()
         {
-            get { return _offeredEndpoint; }
+            _cancelListening = true;
         }
 
         public void Listen()
         {
+            _cancelListening = false;
+
             var clientEndpoint = new IPEndPoint(SourceAddress, _port);
             _client.Client.Bind(clientEndpoint);
 
-            var requestPacket = _client.Receive(ref clientEndpoint);
+            while (!_cancelListening)
+            {
+                var requestPacketData = _client.Receive(ref clientEndpoint);
 
-            PacketHandler.Parse(requestPacket);
+                var packet = PacketHandler.GetPacketInstance(requestPacketData);
+                if (packet == null)
+                    continue;
 
-            var response = CreateResponsePacket();
-            _client.Send(response, response.Length, clientEndpoint);
+                var response = CreateResponsePacket();
+                _client.Send(response, response.Length, clientEndpoint);
+            }
         }
 
         private byte[] _offeredEndpointData = null;

@@ -30,7 +30,7 @@ namespace NetDiscovery
 
         private static byte[] CreateRequestPacket()
         {
-            return Encoding.UTF8.GetBytes("DISCOVERSERVER");
+            return PacketHandler.CreateData(new EndpointRequestPacket());
         }
     }
 }
