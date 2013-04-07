@@ -21,7 +21,7 @@ namespace NetDiscovery
 
         private static IPacket GetPacket(byte[] data)
         {
-            var packetId = data[ChecksumWidth];
+            var packetId = (PacketIds)data[ChecksumWidth];
             var packet = RegisteredPackets.FirstOrDefault(p => p.Id == packetId);
             if (packet == null)
                 return null;
@@ -45,7 +45,7 @@ namespace NetDiscovery
             var content = packet.GetContent();
             var idPlusContent = new byte[content.Length + 1];
 
-            idPlusContent[0] = packet.Id;
+            idPlusContent[0] = (byte)packet.Id;
             for (int i = 1; i < idPlusContent.Length; ++i)
                 idPlusContent[i] = content[i - 1];
 

@@ -10,7 +10,7 @@ namespace NetDiscovery
 
     interface INetDiscoverer
     {
-        IPEndPoint Discover();
+        DiscoveryResult Discover();
     }
 
     /*
@@ -22,16 +22,23 @@ namespace NetDiscovery
 
     */
 
+    public enum PacketIds: byte
+    {
+        EndpointRequest,
+        OfferEndPoint,
+        NoEndpointAvailable
+    }
+
     interface IPacket
     {
-        byte Id { get; }
+        PacketIds Id { get; }
 
         byte[] GetContent();
     }
 
     struct EndpointRequestPacket : IPacket
     {
-        public byte Id { get { return 0; } }
+        public PacketIds Id { get { return PacketIds.EndpointRequest; } }
 
         public byte[] GetContent()
         {
@@ -44,7 +51,7 @@ namespace NetDiscovery
 
     struct OfferEndPointPacket : IPacket
     {
-        public byte Id {get { return 1; }}
+        public PacketIds Id { get { return PacketIds.OfferEndPoint; } }
         public readonly IPEndPoint OfferedEndPoint;
 
         public byte[] GetContent()
@@ -63,7 +70,7 @@ namespace NetDiscovery
 
     struct NoEndpointAvailablePacket : IPacket
     {
-        public byte Id { get { return 2; } }
+        public PacketIds Id { get { return PacketIds.NoEndpointAvailable; } }
 
         public byte[] GetContent()
         {
