@@ -8,7 +8,7 @@ namespace NetDiscovery
         IPEndPoint OfferedEndpoint { get; }
         void Listen();
 #if TAP
-        Task ListenAsync();
+        void ListenAsync();
 #endif
     }
 

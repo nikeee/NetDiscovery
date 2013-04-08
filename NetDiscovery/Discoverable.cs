@@ -50,7 +50,7 @@ namespace NetDiscovery
             }
         }
 
-        public async Task ListenAsync()
+        public async void ListenAsync()
         {
             _cancelListening = false;
 
