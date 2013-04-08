@@ -10,7 +10,7 @@ Sample usage:
 ```C#
 Discoverer severDiscoverer = new Discoverer(9007);
 DiscoveryResult res = severDiscoverer.Discover();
-if(!res.Canceled && res.Error)
+if(!res.Canceled && !res.Error)
 {
 	var receivedEndpoint = res.OfferedEndPoint;
 	// The sample client-server-application can now operate via the reveivedEndpoint (for example a chat)
