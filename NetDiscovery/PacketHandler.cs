@@ -13,7 +13,7 @@ namespace NetDiscovery
     {
         private static readonly List<IPacket> RegisteredPackets = new List<IPacket>() { new OfferEndPointPacket(), new NoEndpointAvailablePacket(), new EndpointRequestPacket() };
 
-        private const int ChecksumWidth = 16;
+        private const int ChecksumWidth = 4;
 
         public static IPacket GetPacketInstance(byte[] data)
         {
@@ -53,7 +53,7 @@ namespace NetDiscovery
                 idPlusContent[i] = content[i - 1];
 
             byte[] checksum;
-            using (var provider = new MD5CryptoServiceProvider()) //TODO: Change to CRC32
+            using (var provider = new Crc32())
                 checksum = provider.ComputeHash(idPlusContent, 0, idPlusContent.Length);
 
             using (var ms = new MemoryStream())
@@ -74,7 +74,7 @@ namespace NetDiscovery
                 checksum[i] = data[i];
 
             byte[] computedHash;
-            using (var provider = new MD5CryptoServiceProvider()) //TODO: Change to CRC32
+            using (var provider = new Crc32())
                 computedHash = provider.ComputeHash(data, ChecksumWidth - 1, data.Length - ChecksumWidth);
 
             if (checksum != computedHash)
@@ -89,7 +89,7 @@ namespace NetDiscovery
 
 /*
 
-byte[16] checksum; //MD5 // 16 bytes -> better use CRC32
+byte[16] checksum; //CRC32
 byte packetId; // 1 byte
 int contentLength; // 4 byte
 byte[contentLength] content; // contentLength bytes
