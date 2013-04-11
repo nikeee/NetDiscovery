@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace NetDiscovery
 {
-    class Discoverable : INetDiscoverable
+    public class Discoverable : INetDiscoverable
     {
         private static readonly IPAddress SourceAddress = IPAddress.Any;
 

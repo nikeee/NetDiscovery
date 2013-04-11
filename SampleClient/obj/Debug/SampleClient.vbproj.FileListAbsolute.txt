@@ -1,0 +1,12 @@
+C:\Intel\HS2\NetDiscovery\SampleClient\obj\Debug\SampleClient.Resources.resources
+C:\Intel\HS2\NetDiscovery\SampleClient\obj\Debug\SampleClient.vbproj.GenerateResource.Cache
+C:\Intel\HS2\NetDiscovery\SampleClient\obj\Debug\SampleClient.vbprojResolveAssemblyReference.cache
+C:\Intel\HS2\NetDiscovery\SampleClient\bin\Debug\SampleClient.exe.config
+C:\Intel\HS2\NetDiscovery\SampleClient\bin\Debug\SampleClient.exe
+C:\Intel\HS2\NetDiscovery\SampleClient\bin\Debug\SampleClient.pdb
+C:\Intel\HS2\NetDiscovery\SampleClient\bin\Debug\SampleClient.xml
+C:\Intel\HS2\NetDiscovery\SampleClient\bin\Debug\NetDiscovery.dll
+C:\Intel\HS2\NetDiscovery\SampleClient\bin\Debug\NetDiscovery.pdb
+C:\Intel\HS2\NetDiscovery\SampleClient\obj\Debug\SampleClient.exe
+C:\Intel\HS2\NetDiscovery\SampleClient\obj\Debug\SampleClient.xml
+C:\Intel\HS2\NetDiscovery\SampleClient\obj\Debug\SampleClient.pdb

@@ -1,0 +1,12 @@
+C:\Intel\HS2\NetDiscovery\SampleServer\obj\Debug\SampleServer.Resources.resources
+C:\Intel\HS2\NetDiscovery\SampleServer\obj\Debug\SampleServer.vbproj.GenerateResource.Cache
+C:\Intel\HS2\NetDiscovery\SampleServer\bin\Debug\SampleServer.exe
+C:\Intel\HS2\NetDiscovery\SampleServer\bin\Debug\SampleServer.pdb
+C:\Intel\HS2\NetDiscovery\SampleServer\bin\Debug\SampleServer.xml
+C:\Intel\HS2\NetDiscovery\SampleServer\obj\Debug\SampleServer.exe
+C:\Intel\HS2\NetDiscovery\SampleServer\obj\Debug\SampleServer.xml
+C:\Intel\HS2\NetDiscovery\SampleServer\obj\Debug\SampleServer.pdb
+C:\Intel\HS2\NetDiscovery\SampleServer\bin\Debug\SampleServer.exe.config
+C:\Intel\HS2\NetDiscovery\SampleServer\bin\Debug\NetDiscovery.dll
+C:\Intel\HS2\NetDiscovery\SampleServer\bin\Debug\NetDiscovery.pdb
+C:\Intel\HS2\NetDiscovery\SampleServer\obj\Debug\SampleServer.vbprojResolveAssemblyReference.cache

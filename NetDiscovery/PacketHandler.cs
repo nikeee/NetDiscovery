@@ -9,7 +9,7 @@ using NetDiscovery.Packets;
 
 namespace NetDiscovery
 {
-    static class PacketHandler
+    internal static class PacketHandler
     {
         private static readonly List<IPacket> RegisteredPackets = new List<IPacket>() { new OfferEndPointPacket(), new NoEndpointAvailablePacket(), new EndpointRequestPacket() };
 

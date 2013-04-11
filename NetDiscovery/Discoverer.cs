@@ -6,7 +6,7 @@ using NetDiscovery.Packets;
 
 namespace NetDiscovery
 {
-    class Discoverer : INetDiscoverer
+    public class Discoverer : INetDiscoverer
     {
         private static readonly IPAddress SourceAddress = IPAddress.Any;
         private static readonly IPAddress DestinationAddress = IPAddress.Broadcast;

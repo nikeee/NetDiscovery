@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace NetDiscovery
 {
-    interface INetDiscoverable
+    public interface INetDiscoverable
     {
         IPEndPoint OfferedEndpoint { get; }
         void Listen();
@@ -12,7 +12,7 @@ namespace NetDiscovery
 #endif
     }
 
-    interface INetDiscoverer
+    public interface INetDiscoverer
     {
         DiscoveryResult Discover();
 #if TAP

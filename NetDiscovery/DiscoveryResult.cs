@@ -3,7 +3,7 @@ using System.Net;
 
 namespace NetDiscovery
 {
-    class DiscoveryResult
+    public class DiscoveryResult
     {
         public bool Error { get; private set; }
         public bool Canceled { get; private set; }
