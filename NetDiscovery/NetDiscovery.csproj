@@ -47,7 +47,7 @@
     <Compile Include="Discoverer.cs" />
     <Compile Include="DiscoveryResult.cs" />
     <Compile Include="Interfaces.cs" />
-    <Compile Include="ObjectExtensions.cs" />
+    <Compile Include="SerializingExtensions.cs" />
     <Compile Include="PacketHandler.cs" />
     <Compile Include="Packets\EndpointRequestPacket.cs" />
     <Compile Include="Packets\IPacket.cs" />

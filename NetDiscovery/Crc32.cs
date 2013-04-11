@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Security.Cryptography;
 
+// Thanks to:
+// http://damieng.com/blog/2006/08/08/calculating_crc32_in_c_and_net
+
 namespace NetDiscovery
 {
     public class Crc32 : HashAlgorithm
