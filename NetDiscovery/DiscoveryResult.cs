@@ -30,6 +30,5 @@ namespace NetDiscovery
         { }
 
         public readonly static DiscoveryResult NoEndpointAvailableResult = new DiscoveryResult(false, false, true, null,null);
-
     }
 }
