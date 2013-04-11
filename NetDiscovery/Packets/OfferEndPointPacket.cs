@@ -19,6 +19,10 @@ namespace NetDiscovery.Packets
         {
             OfferedEndPoint = content.DeserializeFromBytes<IPEndPoint>();
         }
+        public OfferEndPointPacket(IPEndPoint endPoint)
+        {
+            OfferedEndPoint = endPoint;
+        }
         public OfferEndPointPacket()
         { }
     }

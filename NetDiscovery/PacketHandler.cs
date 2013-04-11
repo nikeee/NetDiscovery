@@ -16,6 +16,7 @@ namespace NetDiscovery
         private const int ChecksumWidth = 4;
         private const int ContentLengthFieldWidth = 4;
         private const int PacketIdFieldWidth = 1;
+        private const int PacketHeaderSize = ChecksumWidth + PacketIdFieldWidth + ContentLengthFieldWidth;
 
         public static IPacket GetPacketInstance(byte[] data)
         {
@@ -34,8 +35,8 @@ namespace NetDiscovery
             int contentLength = BitConverter.ToInt32(data, ChecksumWidth + PacketIdFieldWidth - 1);
 
             var packetContent = new byte[contentLength];
-            for (int i = ChecksumWidth + PacketIdFieldWidth + ContentLengthFieldWidth; i < data.Length; ++i)
-                packetContent[i - (ChecksumWidth + PacketIdFieldWidth + ContentLengthFieldWidth)] = data[i];
+            for (int i = PacketHeaderSize; i < data.Length; ++i)
+                packetContent[i - PacketHeaderSize] = data[i];
 
             var newPacketInstance = Activator.CreateInstance(packet.GetType(), packetContent) as IPacket;
 
@@ -82,16 +83,19 @@ namespace NetDiscovery
             for (int i = 0; i < checksum.Length; i++)
                 checksum[i] = data[i];
 
+            byte[] idLengthContent = data.Skip(ChecksumWidth).ToArray();
+
             byte[] computedHash;
             using (var provider = new Crc32())
-                computedHash = provider.ComputeHash(data, ChecksumWidth - 1, data.Length - ChecksumWidth);
-
-            if (checksum != computedHash)
-                return false;
+                computedHash = provider.ComputeHash(idLengthContent, 0, idLengthContent.Length);
+            
+            for (int i = 0; i < checksum.Length; i++)
+                if(checksum[i] != computedHash[i])
+                    return false;
 
             int contentLength = BitConverter.ToInt32(data, ChecksumWidth + PacketIdFieldWidth);
 
-            return contentLength + ChecksumWidth + PacketIdFieldWidth == data.Length;
+            return contentLength + PacketHeaderSize == data.Length;
         }
     }
 }

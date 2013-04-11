@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using NetDiscovery.Packets;
 
 namespace NetDiscovery
 {
@@ -30,6 +31,13 @@ namespace NetDiscovery
             _cancelListening = true;
         }
 
+        private async void SendOfferEndpointPacket(IPEndPoint clientEndpoint)
+        {
+            var response = CreateResponsePacket();
+            var data = PacketHandler.CreateData(response);
+            await _client.SendAsync(data, data.Length, clientEndpoint);
+        }
+
         public void Listen()
         {
             _cancelListening = false;
@@ -45,8 +53,7 @@ namespace NetDiscovery
                 if (packet == null)
                     continue;
 
-                var response = CreateResponsePacket();
-                _client.Send(response, response.Length, clientEndpoint);
+                SendOfferEndpointPacket(clientEndpoint);
             }
         }
 
@@ -65,15 +72,14 @@ namespace NetDiscovery
                 if (packet == null)
                     continue;
 
-                var response = CreateResponsePacket();
-                await _client.SendAsync(response, response.Length, clientEndpoint);
+                SendOfferEndpointPacket(clientEndpoint);
             }
         }
 
-        private byte[] _offeredEndpointData;
-        private byte[] CreateResponsePacket()
+        private IPacket _offeredEndpointPacket;
+        private IPacket CreateResponsePacket()
         {
-            return _offeredEndpointData ?? (_offeredEndpointData = _offeredEndpoint.SerializeToBytes());
+            return _offeredEndpointPacket ?? (_offeredEndpointPacket = new OfferEndPointPacket(_offeredEndpoint));
         }
     }
 }
