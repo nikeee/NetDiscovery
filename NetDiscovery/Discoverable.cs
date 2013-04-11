@@ -45,15 +45,17 @@ namespace NetDiscovery
             var clientEndpoint = new IPEndPoint(SourceAddress, _port);
             _client.Client.Bind(clientEndpoint);
 
+            IPEndPoint remoteEndPoint = null;
+
             while (!_cancelListening)
             {
-                var requestPacketData = _client.Receive(ref clientEndpoint);
+                var requestPacketData = _client.Receive(ref remoteEndPoint);
 
                 var packet = PacketHandler.GetPacketInstance(requestPacketData);
                 if (packet == null)
                     continue;
 
-                SendOfferEndpointPacket(clientEndpoint);
+                SendOfferEndpointPacket(remoteEndPoint);
             }
         }
 
@@ -72,7 +74,7 @@ namespace NetDiscovery
                 if (packet == null)
                     continue;
 
-                SendOfferEndpointPacket(clientEndpoint);
+                SendOfferEndpointPacket(updResult.RemoteEndPoint);
             }
         }
 
