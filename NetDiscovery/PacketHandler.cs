@@ -14,6 +14,8 @@ namespace NetDiscovery
         private static readonly List<IPacket> RegisteredPackets = new List<IPacket>() { new OfferEndPointPacket(), new NoEndpointAvailablePacket(), new EndpointRequestPacket() };
 
         private const int ChecksumWidth = 4;
+        private const int ContentLengthFieldWidth = 4;
+        private const int PacketIdFieldWidth = 1;
 
         public static IPacket GetPacketInstance(byte[] data)
         {
@@ -29,11 +31,11 @@ namespace NetDiscovery
             if (packet == null)
                 return null;
 
-            int contentLength = BitConverter.ToInt32(data, ChecksumWidth + 1);
+            int contentLength = BitConverter.ToInt32(data, ChecksumWidth + PacketIdFieldWidth - 1);
 
             var packetContent = new byte[contentLength];
-            for (int i = ChecksumWidth + 1 + 4; i < data.Length; ++i)
-                packetContent[i - (ChecksumWidth + 1 + 4)] = data[i];
+            for (int i = ChecksumWidth + PacketIdFieldWidth + ContentLengthFieldWidth; i < data.Length; ++i)
+                packetContent[i - (ChecksumWidth + PacketIdFieldWidth + ContentLengthFieldWidth)] = data[i];
 
             var newPacketInstance = Activator.CreateInstance(packet.GetType(), packetContent) as IPacket;
 
@@ -46,27 +48,34 @@ namespace NetDiscovery
                 throw new ArgumentNullException("packet");
 
             var content = packet.GetContent();
-            var idPlusContent = new byte[content.Length + 1];
+            var idLengthContent = new byte[content.Length + PacketIdFieldWidth + ContentLengthFieldWidth];
 
-            idPlusContent[0] = (byte)packet.Id;
-            for (int i = 1; i < idPlusContent.Length; ++i)
-                idPlusContent[i] = content[i - 1];
+            idLengthContent[0] = (byte)packet.Id;
+
+            var contentLength = BitConverter.GetBytes(content.Length);
+            idLengthContent[1] = contentLength[0]; // Not in the mood for a for loop
+            idLengthContent[2] = contentLength[1];
+            idLengthContent[3] = contentLength[2];
+            idLengthContent[4] = contentLength[3];
+
+            for (int i = (PacketIdFieldWidth + ContentLengthFieldWidth); i < idLengthContent.Length; ++i)
+                idLengthContent[i] = content[i - (PacketIdFieldWidth + ContentLengthFieldWidth)];
 
             byte[] checksum;
             using (var provider = new Crc32())
-                checksum = provider.ComputeHash(idPlusContent, 0, idPlusContent.Length);
+                checksum = provider.ComputeHash(idLengthContent, 0, idLengthContent.Length);
 
             using (var ms = new MemoryStream())
             {
-                ms.Write(checksum, 0, checksum.Length);
-                ms.Write(idPlusContent, 0, idPlusContent.Length);
+                ms.Write(checksum, 0, ChecksumWidth);
+                ms.Write(idLengthContent, 0, idLengthContent.Length);
                 return ms.ToArray();
             }
         }
 
         private static bool CheckPacketDataIntegrity(byte[] data)
         {
-            if (data == null || data.Length < ChecksumWidth + 1 + 4)
+            if (data == null || data.Length < ChecksumWidth + PacketIdFieldWidth + ContentLengthFieldWidth)
                 return false;
 
             var checksum = new byte[ChecksumWidth];
@@ -80,9 +89,9 @@ namespace NetDiscovery
             if (checksum != computedHash)
                 return false;
 
-            int contentLength = BitConverter.ToInt32(data, ChecksumWidth + 1);
+            int contentLength = BitConverter.ToInt32(data, ChecksumWidth + PacketIdFieldWidth);
 
-            return contentLength + ChecksumWidth == data.Length;
+            return contentLength + ChecksumWidth + PacketIdFieldWidth == data.Length;
         }
     }
 }
@@ -92,6 +101,6 @@ namespace NetDiscovery
 byte[16] checksum; //CRC32
 byte packetId; // 1 byte
 int contentLength; // 4 byte
-byte[contentLength] content; // contentLength bytes
+byte[contentLength] content; // contentLength byte
 
 */
