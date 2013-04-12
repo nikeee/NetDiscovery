@@ -83,3 +83,4 @@ TestResults/
 .DS_Store?
 ehthumbs.db
 Thumbs.db
+*.exe
