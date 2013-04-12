@@ -1,5 +1,6 @@
 ﻿Imports System.Net.Sockets
 Imports System.Net
+Imports System.IO
 
 Class ChatClient
 
@@ -8,6 +9,7 @@ Class ChatClient
     Private _ep As IPEndPoint
 
     Private _ns As NetworkStream
+    Private _writer As BinaryWriter
 
     Sub New(name As String, endPoint As IPEndPoint)
         If String.IsNullOrWhiteSpace(name) Then Throw New ArgumentNullException("name")
@@ -21,6 +23,7 @@ Class ChatClient
     Sub Connect()
         _c.Connect(_ep)
         _ns = _c.GetStream()
+        _writer = New BinaryWriter(_ns)
     End Sub
 
     Public Sub SendMessage(message As String)
@@ -30,7 +33,8 @@ Class ChatClient
     Private Sub SendPacket(p As IChatPacket)
         If Not _c.Client.Connected OrElse _ns Is Nothing Then Throw New InvalidOperationException()
         'TODO: Send packet
-
+        Dim bytes = p.GetContent()
+        _writer.Write(bytes)
     End Sub
 
 End Class

@@ -2,14 +2,7 @@
 
 Class ChackPacketHandler
     Public Function GetPacketData(p As SendMessagePacket) As Byte()
-        Using ms As New MemoryStream()
-            Using wtr As New BinaryWriter(ms)
-                wtr.Write(p.From)
-                wtr.Write(p.Message)
-                wtr.Flush()
-            End Using
-            Return ms.ToArray()
-        End Using
+
     End Function
     Public Function GetPacketData(bytes As Byte()) As GotMessagePacket
         Using ms As New MemoryStream(bytes)
@@ -23,12 +16,24 @@ Class ChackPacketHandler
 End Class
 
 Interface IChatPacket
+    Function GetContent() As Byte()
 End Interface
 
 Structure GotMessagePacket
     Implements IChatPacket
 
-    Public From As String
+    Public Function GetContent() As Byte() Implements IChatPacket.GetContent
+        Using ms As New MemoryStream()
+            Using wtr As New BinaryWriter(ms)
+                wtr.Write([From])
+                wtr.Write(Message)
+                wtr.Flush()
+            End Using
+            Return ms.ToArray()
+        End Using
+    End Function
+
+    Public [From] As String
     Public Message As String
     Sub New(frm As String, msg As String)
         From = frm
@@ -39,7 +44,18 @@ End Structure
 Structure SendMessagePacket
     Implements IChatPacket
 
-    Public From As String
+    Public Function GetContent() As Byte() Implements IChatPacket.GetContent
+        Using ms As New MemoryStream()
+            Using wtr As New BinaryWriter(ms)
+                wtr.Write([From])
+                wtr.Write(Message)
+                wtr.Flush()
+            End Using
+            Return ms.ToArray()
+        End Using
+    End Function
+
+    Public [From] As String
     Public Message As String
     Sub New(frm As String, msg As String)
         From = frm
