@@ -7,7 +7,7 @@ Module Client
     Sub Main()
         Dim name As String
         Do
-            Console.WriteLine("Pick a name:")
+            Console.Write("Pick a name: ")
             name = Console.ReadLine()
         Loop Until Not String.IsNullOrWhiteSpace(name)
 
@@ -36,7 +36,19 @@ Module Client
         Console.WriteLine("Connecting to Chat Endpoint: {0}", ep) ' Got endpoint for chat, should now connect to this endpoint
 
         Dim cc = New ChatClient(name, ep)
+        AddHandler cc.GotMessage, AddressOf GotMessage
         cc.Connect()
+        While True
+            Dim message As String
+            Do
+                Console.Write(">")
+                message = Console.ReadLine()
+            Loop Until Not String.IsNullOrWhiteSpace(message)
+            cc.SendMessage(message)
+        End While
+    End Sub
 
+    Private Sub GotMessage(sender As Object, p As GotMessagePacket)
+        Console.WriteLine("{0}: {1}", p.From, p.Message)
     End Sub
 End Module

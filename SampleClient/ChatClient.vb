@@ -8,8 +8,6 @@ Class ChatClient
     Private _name As String
     Private _ep As IPEndPoint
 
-    Private _ns As NetworkStream
-
     Sub New(name As String, endPoint As IPEndPoint)
         If String.IsNullOrWhiteSpace(name) Then Throw New ArgumentNullException("name")
         If endPoint Is Nothing Then Throw New ArgumentNullException("endPoint")
@@ -27,7 +25,9 @@ Class ChatClient
     End Sub
 
     Private Sub InvokeMessagePacket(p As GotMessagePacket)
-        RaiseEvent GotMessage(Me, p)
+        If p.From <> _name Then
+            RaiseEvent GotMessage(Me, p)
+        End If
     End Sub
 
     Private Async Sub ReadIncomingPacketsAsync()
@@ -43,7 +43,7 @@ Class ChatClient
     End Sub
 
     Private Async Sub SendPacket(p As IChatPacket)
-        If Not _c.Client.Connected OrElse _ns Is Nothing Then Throw New InvalidOperationException()
+        If Not _c.Client.Connected Then Throw New InvalidOperationException()
         Dim bytes = p.GetContent()
         Await _c.SendAsync(bytes, bytes.Length)
     End Sub
