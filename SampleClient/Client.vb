@@ -1,16 +1,23 @@
 ﻿Imports NetDiscovery
 Imports System.Net
+Imports System.Net.Sockets
 
 Module Client
 
     Sub Main()
-        Initialize()
+        Dim name As String
+        Do
+            Console.WriteLine("Pick a name:")
+            name = Console.ReadLine()
+        Loop Until Not String.IsNullOrWhiteSpace(name)
+
+        Initialize(name)
 
         Console.WriteLine("Waiting...")
         Console.ReadKey()
     End Sub
 
-    Private Async Sub Initialize()
+    Private Async Sub Initialize(name As String)
         Dim serverDiscoverer As New Discoverer(9007)
 
         Dim res As DiscoveryResult = Await serverDiscoverer.DiscoverAsync()
@@ -27,6 +34,9 @@ Module Client
 
         Dim ep As IPEndPoint = res.OfferedEndPoint()
         Console.WriteLine("Connecting to Chat Endpoint: {0}", ep) ' Got endpoint for chat, should now connect to this endpoint
+
+        Dim cc = New ChatClient(name, ep)
+        cc.Connect()
 
     End Sub
 End Module
