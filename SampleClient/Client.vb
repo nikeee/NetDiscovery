@@ -14,7 +14,9 @@ Module Client
         Initialize(name)
 
         Console.WriteLine("Waiting...")
-        Console.ReadKey()
+        While True
+            Console.ReadKey()
+        End While
     End Sub
 
     Private Async Sub Initialize(name As String)
