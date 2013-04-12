@@ -1,10 +1,7 @@
 ﻿Imports System.IO
 
-Class ChackPacketHandler
-    Public Function GetPacketData(p As SendMessagePacket) As Byte()
-
-    End Function
-    Public Function GetPacketData(bytes As Byte()) As GotMessagePacket
+Class ChatPacketHandler
+    Public Shared Function GetPacketInstance(bytes As Byte()) As GotMessagePacket
         Using ms As New MemoryStream(bytes)
             Using rdr As New BinaryReader(ms)
                 Dim from = rdr.ReadString()

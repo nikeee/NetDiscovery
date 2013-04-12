@@ -69,7 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatClient.vb" />
-    <Compile Include="ChatPackets\ChackPacketReader.vb" />
+    <Compile Include="ChatPackets\ChatPacketHandler.vb" />
     <Compile Include="Client.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

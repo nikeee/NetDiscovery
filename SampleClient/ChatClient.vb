@@ -4,12 +4,11 @@ Imports System.IO
 
 Class ChatClient
 
-    Private _c As TcpClient
+    Private _c As UdpClient
     Private _name As String
     Private _ep As IPEndPoint
 
     Private _ns As NetworkStream
-    Private _writer As BinaryWriter
 
     Sub New(name As String, endPoint As IPEndPoint)
         If String.IsNullOrWhiteSpace(name) Then Throw New ArgumentNullException("name")
@@ -17,24 +16,36 @@ Class ChatClient
 
         _name = name
         _ep = endPoint
-        _c = New TcpClient()
+        _c = New UdpClient()
     End Sub
+
+    Public Event GotMessage(sender As Object, e As GotMessagePacket) ' Not in the mood of creatign own event args
 
     Sub Connect()
         _c.Connect(_ep)
-        _ns = _c.GetStream()
-        _writer = New BinaryWriter(_ns)
+        ReadIncomingPacketsAsync()
+    End Sub
+
+    Private Sub InvokeMessagePacket(p As GotMessagePacket)
+        RaiseEvent GotMessage(Me, p)
+    End Sub
+
+    Private Async Sub ReadIncomingPacketsAsync()
+        While True
+            Dim res = Await _c.ReceiveAsync()
+            Dim packet = ChatPacketHandler.GetPacketInstance(res.Buffer)
+            InvokeMessagePacket(packet)
+        End While
     End Sub
 
     Public Sub SendMessage(message As String)
         SendPacket(New SendMessagePacket(_name, message))
     End Sub
 
-    Private Sub SendPacket(p As IChatPacket)
+    Private Async Sub SendPacket(p As IChatPacket)
         If Not _c.Client.Connected OrElse _ns Is Nothing Then Throw New InvalidOperationException()
-        'TODO: Send packet
         Dim bytes = p.GetContent()
-        _writer.Write(bytes)
+        Await _c.SendAsync(bytes, bytes.Length)
     End Sub
 
 End Class

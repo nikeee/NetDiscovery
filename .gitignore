@@ -84,3 +84,4 @@ TestResults/
 ehthumbs.db
 Thumbs.db
 *.exe
+SampleClient/bin/Debug/SampleClient.exe
