@@ -1,5 +1,3 @@
-﻿###################
-# compiled source #
 ###################
 
 *.com
@@ -15,6 +13,7 @@
 
 *.pfx
 HolzShotsRoot.pfx
+
 
 # Include dlls if theyre in the NuGet packages directory
 !/packages/*/lib/*.dll
