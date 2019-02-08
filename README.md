@@ -6,7 +6,7 @@ A simple, small library for local area networks server discovery (DHCP-Like). Cu
 Sample usage:
 =============
 
-#Client:
+# Client:
 ```C#
 Discoverer severDiscoverer = new Discoverer(9007);
 DiscoveryResult res = severDiscoverer.Discover();
@@ -18,7 +18,7 @@ if(!res.Canceled && !res.Error)
 
 ```
 
-#Server:
+# Server:
 ```C#
 // endPointForChat is the IPEndPoint the client-server-application actually uses (a chat, for example)
 Discoverable clientHandler = new Discoverable(9007, endPointForChat);
